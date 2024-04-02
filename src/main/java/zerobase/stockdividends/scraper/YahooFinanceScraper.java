@@ -5,6 +5,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Component;
 import zerobase.stockdividends.model.Company;
 import zerobase.stockdividends.model.Dividend;
 import zerobase.stockdividends.model.ScrapedResult;
@@ -15,11 +16,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class YahooFinanceScraper {
+@Component
+public class YahooFinanceScraper implements Scraper {
 
     private static final String STATISTICS_URL = "https://finance.yahoo.com/quote/%s/history?period1=%d&period2=%d&interval=1mo";
+    private static final String SUMMARY_URL = "https://finance.yahoo.com/quote/%s?p=%s";
     private static final long START_TIME = 86400;
 
+    @Override
     public ScrapedResult scrap(Company company) {
         var scrapedResult = new ScrapedResult();
         scrapedResult.setCompany(company);
@@ -66,7 +70,23 @@ public class YahooFinanceScraper {
         return scrapedResult;
     }
 
+    @Override
     public Company scrapCompanyByTicker(String ticker) {
+        String url = String.format(SUMMARY_URL, ticker, ticker);
+
+        try {
+            Document document = Jsoup.connect(url).get();
+            Element titleElement = document.getElementsByTag("h1").get(0);
+            String name = titleElement.text().split("\\(")[0].trim();
+
+            return Company.builder()
+                    .ticker(ticker)
+                    .name(name)
+                    .build();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 }
