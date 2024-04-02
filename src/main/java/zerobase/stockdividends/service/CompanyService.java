@@ -2,6 +2,7 @@ package zerobase.stockdividends.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -22,7 +23,6 @@ public class CompanyService {
     private final Scraper yahooFinanceScraper;
 
     private final CompanyRepository companyRepository;
-
     private final DividendRepository dividendRepository;
 
     public Company save (String ticker) {
@@ -52,5 +52,13 @@ public class CompanyService {
 
         this.dividendRepository.saveAll(dividendEntities);
         return company;
+    }
+
+    public List<String> getCompanyNamesByKeyword(String keyword) {
+        Pageable limit = PageRequest.of(0,10);
+        Page<CompanyEntity> companyEntities = this.companyRepository.findByNameStartingWithIgnoreCase(keyword, limit);
+        return companyEntities.stream()
+                .map(CompanyEntity::getName)
+                .toList();
     }
 }
