@@ -31,10 +31,7 @@ public class ScraperScheduler {
 
         for (var company : companies) {
             log.info("scraping -> " + company.getName());
-            ScrapedResult scrapedResult = this.yahooFinanceScraper.scrap(Company.builder()
-                    .name(company.getName())
-                    .ticker(company.getTicker())
-                    .build());
+            ScrapedResult scrapedResult = this.yahooFinanceScraper.scrap(new Company(company.getName(), company.getTicker()));
 
             scrapedResult.getDividends().stream()
                     .map(e -> new DividendEntity(company.getId(), e))
