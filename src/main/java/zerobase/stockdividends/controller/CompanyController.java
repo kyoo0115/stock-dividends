@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
+import zerobase.stockdividends.exception.impl.NoTickerException;
 import zerobase.stockdividends.model.Company;
 import zerobase.stockdividends.model.constants.CacheKey;
 import zerobase.stockdividends.persist.entity.CompanyEntity;
@@ -40,7 +41,7 @@ public class CompanyController {
     public ResponseEntity<?> addCompany(@RequestBody Company request) {
         String ticker = request.getTicker().trim();
         if (ObjectUtils.isEmpty(ticker)) {
-            throw new RuntimeException("ticker is empty");
+            throw new NoTickerException();
         }
 
         Company company = this.companyService.save(ticker);
