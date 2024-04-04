@@ -19,6 +19,7 @@ import zerobase.stockdividends.service.MemberService;
 public class AuthController {
 
     private final MemberService memberService;
+
     private final TokenProvider tokenProvider;
 
     @PostMapping("/signup")

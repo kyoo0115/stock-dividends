@@ -36,12 +36,12 @@ public class CacheConfig {
                 .build();
     }
 
+
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
-        RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
-        configuration.setHostName(this.host);
-        configuration.setPort(this.port);
-
-        return new LettuceConnectionFactory(configuration);
+        RedisStandaloneConfiguration conf = new RedisStandaloneConfiguration();
+        conf.setHostName(this.host);
+        conf.setPort(this.port);
+        return new LettuceConnectionFactory(conf);
     }
 }
