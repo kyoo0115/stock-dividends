@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import zerobase.stockdividends.model.Company;
 import zerobase.stockdividends.model.Dividend;
 import zerobase.stockdividends.model.ScrapedResult;
+import zerobase.stockdividends.model.constants.CacheKey;
 import zerobase.stockdividends.persist.entity.CompanyEntity;
 import zerobase.stockdividends.persist.entity.DividendEntity;
 import zerobase.stockdividends.persist.repository.CompanyRepository;
@@ -20,7 +21,7 @@ public class FinanceService {
     private final CompanyRepository companyRepository;
     private final DividendRepository dividendRepository;
 
-    @Cacheable(key = "#companyName", value = "finance")
+    @Cacheable(key = "#companyName", value = CacheKey.KEY_FINANCE)
     public ScrapedResult getDividendByCompanyName(String companyName) {
         // 1. 회사명을 기준으로 회사 정보를 조회
         CompanyEntity company = this.companyRepository.findByName(companyName)
