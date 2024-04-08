@@ -40,7 +40,7 @@ public class SecurityConfiguration {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> web.ignoring().requestMatchers("/h2-console/**");
+        return web -> web.ignoring().requestMatchers("/h2-console/*");
     }
 
     @Bean

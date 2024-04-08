@@ -6,6 +6,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
+import zerobase.stockdividends.exception.impl.IncorrectMonthFormatException;
+import zerobase.stockdividends.exception.impl.ScrapingException;
+import zerobase.stockdividends.exception.impl.UrlConnectionException;
 import zerobase.stockdividends.model.Company;
 import zerobase.stockdividends.model.Dividend;
 import zerobase.stockdividends.model.ScrapedResult;
@@ -53,7 +56,7 @@ public class YahooFinanceScraper implements Scraper {
                 String dividend = splits[3];
 
                 if(month < 0) {
-                    throw new RuntimeException("Unexpected Month enum value -> " + splits[0]);
+                    throw new IncorrectMonthFormatException();
                 }
 
                 dividends.add(new Dividend((LocalDateTime.of(year, month, day, 0, 0)), dividend));
@@ -62,7 +65,7 @@ public class YahooFinanceScraper implements Scraper {
             scrapedResult.setDividends(dividends);
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new UrlConnectionException();
         }
         return scrapedResult;
     }
@@ -79,8 +82,7 @@ public class YahooFinanceScraper implements Scraper {
             return new Company(ticker, name);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ScrapingException();
         }
-        return null;
     }
 }
